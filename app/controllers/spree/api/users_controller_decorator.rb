@@ -23,6 +23,7 @@ module Spree
 
       def sign_in
         @user = Spree::User.find_by_email(params[:user][:email])
+        puts "API AUTH USER IS #{@user}"
         if !@user.present? || !@user.valid_password?(params[:user][:password])
           unauthorized
           return
