@@ -14,10 +14,20 @@ module Spree
         end
 
         @user = Spree::User.new(user_params)
+
+        if order_token
+          guest_order = Spree::Order.find_by(token: order_token)
+
+          if guest_order.present?
+            @user.orders << guest_order
+          end
+        end
+
         if !@user.save
           unauthorized
           return
         end
+
         @user.generate_spree_api_key!
       end
 
@@ -27,6 +37,16 @@ module Spree
           unauthorized
           return
         end
+
+        if order_token
+          guest_order = Spree::Order.find_by(token: order_token)
+
+          if guest_order.present?
+            guest_order.user_id = @user.id
+            guest_order.save
+          end
+        end
+
         @user.generate_spree_api_key! if @user.spree_api_key.blank?
       end
 
