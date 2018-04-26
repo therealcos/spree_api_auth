@@ -15,8 +15,8 @@ module Spree
 
         @user = Spree::User.new(user_params)
 
-        if order_token
-          guest_order = Spree::Order.find_by(token: order_token)
+        if params[:guest_order_number].present?
+          guest_order = Spree::Order.find_by!(number: params[:guest_order_number])
 
           if guest_order.present?
             @user.orders << guest_order
@@ -38,8 +38,8 @@ module Spree
           return
         end
 
-        if order_token
-          guest_order = Spree::Order.find_by(token: order_token)
+        if params[:guest_order_number].present?
+          guest_order = Spree::Order.find_by!(number: params[:guest_order_number])
 
           if guest_order.present?
             guest_order.user_id = @user.id
