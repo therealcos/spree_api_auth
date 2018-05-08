@@ -6,7 +6,6 @@ module Spree
       before_action :authenticate_user, :except => [:sign_up, :sign_in]
 
       def sign_up
-
         @user = Spree::User.find_by_email(params[:user][:email])
 
         if @user.present?
@@ -19,7 +18,17 @@ module Spree
           guest_order = Spree::Order.find_by!(number: params[:guest_order_number])
 
           if guest_order.present?
-            @user.orders << guest_order
+            guest_order.user_id = @user.id
+            
+            if @user.bill_address.try(:valid?)
+              guest_order.bill_address_id = @user.bill_address_id
+            end
+
+            if @user.ship_address.try(:valid?) && guest_order.checkout_steps.include?("delivery")
+              guest_order.ship_address_id = @user.ship_address_id
+            end
+
+            guest_order.save
           end
         end
 
@@ -43,6 +52,15 @@ module Spree
 
           if guest_order.present?
             guest_order.user_id = @user.id
+
+            if @user.bill_address.try(:valid?)
+              guest_order.bill_address_id = @user.bill_address_id
+            end
+
+            if @user.ship_address.try(:valid?) && guest_order.checkout_steps.include?("delivery")
+              guest_order.ship_address_id = @user.ship_address_id
+            end
+
             guest_order.save
           end
         end
