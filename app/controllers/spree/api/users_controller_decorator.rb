@@ -19,7 +19,8 @@ module Spree
 
           if guest_order.present?
             guest_order.user_id = @user.id
-            
+            guest_order.email = @user.email
+
             if @user.bill_address.try(:valid?)
               guest_order.bill_address_id = @user.bill_address_id
             end
@@ -52,6 +53,7 @@ module Spree
 
           if guest_order.present?
             guest_order.user_id = @user.id
+            guest_order.email = @user.email
 
             if @user.bill_address.try(:valid?)
               guest_order.bill_address_id = @user.bill_address_id
