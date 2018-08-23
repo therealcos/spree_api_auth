@@ -1,6 +1,6 @@
 object @user
 
-attributes *user_attributes, :spree_api_key, :last_order_number
+attributes *user_attributes, :spree_api_key
 child(:bill_address => :bill_address) do
   extends "spree/api/v1/addresses/show"
 end

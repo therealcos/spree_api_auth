@@ -47,11 +47,6 @@ module Spree
           unauthorized
           return
         end
-        
-        @user.last_order_number = @user.orders.order("created_at DESC").first.number
-        
-        puts "************ USER WITH ORDER IS *****************"
-        puts @user.last_order_number
 
         if params[:guest_order_number].present?
           guest_order = Spree::Order.find_by!(number: params[:guest_order_number])
