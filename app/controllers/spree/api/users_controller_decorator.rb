@@ -47,6 +47,11 @@ module Spree
           unauthorized
           return
         end
+        
+        @user.last_order_number = @user.orders.order("created_at DESC").first.number
+        
+        puts "************ USER WITH ORDER IS *****************"
+        puts @user
 
         if params[:guest_order_number].present?
           guest_order = Spree::Order.find_by!(number: params[:guest_order_number])
@@ -66,7 +71,7 @@ module Spree
             guest_order.save
           end
         end
-
+        
         @user.generate_spree_api_key! if @user.spree_api_key.blank?
       end
 
